@@ -10,29 +10,29 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_06_014638) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_16_115717) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
   create_table "challenge_options", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.string "description"
+    t.string "result_code", null: false
     t.string "label", null: false
+    t.string "description"
     t.integer "point", null: false
     t.integer "position", null: false
-    t.string "result_code", null: false
+    t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["result_code"], name: "index_challenge_options_on_result_code", unique: true
     t.check_constraint "point >= 1 AND point <= 3", name: "challenge_options_point_range"
   end
 
   create_table "evaluations", force: :cascade do |t|
+    t.bigint "study_record_id", null: false
+    t.bigint "focus_option_id", null: false
     t.bigint "challenge_option_id", null: false
+    t.integer "focus_point", null: false
     t.integer "challenge_point", null: false
     t.datetime "created_at", null: false
-    t.bigint "focus_option_id", null: false
-    t.integer "focus_point", null: false
-    t.bigint "study_record_id", null: false
     t.datetime "updated_at", null: false
     t.index ["challenge_option_id"], name: "index_evaluations_on_challenge_option_id"
     t.index ["focus_option_id"], name: "index_evaluations_on_focus_option_id"
@@ -42,21 +42,21 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_06_014638) do
   end
 
   create_table "focus_options", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.string "description"
+    t.string "result_code", null: false
     t.string "label", null: false
+    t.string "description"
     t.integer "point", null: false
     t.integer "position", null: false
-    t.string "result_code", null: false
+    t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["result_code"], name: "index_focus_options_on_result_code", unique: true
     t.check_constraint "point >= 1 AND point <= 3", name: "focus_options_point_range"
   end
 
   create_table "goal_skill_settings", force: :cascade do |t|
-    t.datetime "created_at", null: false
     t.bigint "goal_id", null: false
     t.bigint "learning_skill_id", null: false
+    t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["goal_id", "learning_skill_id"], name: "index_goal_skill_settings_on_goal_id_and_learning_skill_id", unique: true
     t.index ["goal_id"], name: "index_goal_skill_settings_on_goal_id"
@@ -64,42 +64,53 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_06_014638) do
   end
 
   create_table "goals", force: :cascade do |t|
-    t.datetime "completed_at"
-    t.datetime "created_at", null: false
+    t.bigint "user_id", null: false
     t.string "name", limit: 100, null: false
     t.string "status", default: "active", null: false
+    t.datetime "completed_at"
+    t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "user_id", null: false
     t.index ["user_id"], name: "index_goals_on_active_user_id", unique: true, where: "((status)::text = 'active'::text)"
     t.index ["user_id"], name: "index_goals_on_user_id"
   end
 
-  create_table "learning_skills", force: :cascade do |t|
+  create_table "insights", force: :cascade do |t|
+    t.bigint "study_record_id", null: false
+    t.string "kind", null: false
+    t.string "body", limit: 100, null: false
     t.datetime "created_at", null: false
-    t.string "name", limit: 100, null: false
     t.datetime "updated_at", null: false
+    t.index ["study_record_id", "kind"], name: "index_insights_on_study_record_id_and_kind", unique: true
+    t.index ["study_record_id"], name: "index_insights_on_study_record_id"
+    t.check_constraint "kind::text = ANY (ARRAY['went_well'::character varying, 'to_improve'::character varying]::text[])", name: "insights_kind_allowed_values"
+  end
+
+  create_table "learning_skills", force: :cascade do |t|
     t.bigint "user_id", null: false
+    t.string "name", limit: 100, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["user_id", "name"], name: "index_learning_skills_on_user_id_and_name", unique: true
     t.index ["user_id"], name: "index_learning_skills_on_user_id"
   end
 
   create_table "study_records", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.integer "planned_minutes", null: false
     t.string "activity", limit: 100
-    t.integer "actual_seconds"
+    t.string "status", default: "running", null: false
     t.datetime "created_at", null: false
-    t.datetime "current_pause_started_at"
-    t.datetime "ended_at"
+    t.datetime "updated_at", null: false
+    t.datetime "started_at", null: false
     t.datetime "expires_at", null: false
+    t.datetime "current_pause_started_at"
+    t.integer "paused_seconds", default: 0, null: false
+    t.integer "pause_count", default: 0, null: false
+    t.datetime "ended_at"
+    t.integer "actual_seconds"
+    t.string "rank"
     t.bigint "goal_id"
     t.bigint "learning_skill_id"
-    t.integer "pause_count", default: 0, null: false
-    t.integer "paused_seconds", default: 0, null: false
-    t.integer "planned_minutes", null: false
-    t.string "rank"
-    t.datetime "started_at", null: false
-    t.string "status", default: "running", null: false
-    t.datetime "updated_at", null: false
-    t.bigint "user_id", null: false
     t.index ["goal_id"], name: "index_study_records_on_goal_id"
     t.index ["learning_skill_id"], name: "index_study_records_on_learning_skill_id"
     t.index ["user_id"], name: "index_study_records_on_active_user_id", unique: true, where: "((status)::text = ANY ((ARRAY['running'::character varying, 'paused'::character varying, 'awaiting_evaluation'::character varying])::text[]))"
@@ -110,29 +121,29 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_06_014638) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "account_name"
-    t.datetime "created_at", null: false
     t.string "email", limit: 255, default: "", null: false
     t.string "encrypted_password", default: "", null: false
-    t.datetime "reset_password_sent_at"
-    t.string "reset_password_token"
+    t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "account_name"
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
     t.index ["account_name"], name: "index_users_on_account_name", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
   create_table "weekly_reflections", force: :cascade do |t|
-    t.string "comment", limit: 200
-    t.datetime "created_at", null: false
+    t.bigint "goal_id", null: false
+    t.bigint "learning_skill_id", null: false
+    t.date "week_start_on", null: false
     t.string "expectation", null: false
     t.string "expectation_note", limit: 200
     t.string "feeling"
-    t.bigint "goal_id", null: false
-    t.bigint "learning_skill_id", null: false
+    t.string "comment", limit: 200
     t.datetime "reflected_at"
+    t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.date "week_start_on", null: false
     t.index ["goal_id", "week_start_on"], name: "index_weekly_reflections_on_goal_id_and_week_start_on", unique: true
     t.index ["goal_id"], name: "index_weekly_reflections_on_goal_id"
     t.index ["learning_skill_id"], name: "index_weekly_reflections_on_learning_skill_id"
@@ -147,6 +158,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_06_014638) do
   add_foreign_key "goal_skill_settings", "goals"
   add_foreign_key "goal_skill_settings", "learning_skills"
   add_foreign_key "goals", "users"
+  add_foreign_key "insights", "study_records"
   add_foreign_key "learning_skills", "users"
   add_foreign_key "study_records", "goals"
   add_foreign_key "study_records", "learning_skills"
