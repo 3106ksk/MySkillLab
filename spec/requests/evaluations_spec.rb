@@ -153,6 +153,61 @@ RSpec.describe "Evaluations", type: :request do
         expect(study_record.reload).to be_awaiting_evaluation
         expect(response).to have_http_status(:unprocessable_content)
       end
+
+      context "気づきを一緒に送る場合" do
+        def post_with_insight(insight)
+          post study_record_evaluation_path(study_record),
+               params: evaluation_params.merge(insight: insight)
+        end
+
+        it "両方を書いた場合は、評価と気づき2件を保存する" do
+          expect {
+            post_with_insight(went_well: "最初の5分は音読から始めた", to_improve: "スマホを別の部屋に置く")
+          }.to change(Evaluation, :count).by(1).and change(Insight, :count).by(2)
+
+          expect(study_record.reload).to be_evaluated
+          expect(response).to redirect_to(study_record_evaluation_path(study_record))
+          expect(response).to have_http_status(:see_other)
+        end
+
+        it "片方だけ書いた場合は、書いた方だけを保存する" do
+          expect {
+            post_with_insight(went_well: "最初の5分は音読から始めた", to_improve: "")
+          }.to change(Evaluation, :count).by(1).and change(Insight, :count).by(1)
+
+          expect(study_record.insights.pluck(:kind)).to eq(["went_well"])
+        end
+
+        it "両方とも空欄の場合は、評価だけを保存する" do
+          expect {
+            post_with_insight(went_well: "", to_improve: "")
+          }.to change(Evaluation, :count).by(1).and change(Insight, :count).by(0)
+
+          expect(study_record.reload).to be_evaluated
+        end
+
+        it "空白だけの場合は、評価だけを保存する" do
+          expect {
+            post_with_insight(went_well: "   ", to_improve: "　　")
+          }.to change(Evaluation, :count).by(1).and change(Insight, :count).by(0)
+        end
+
+        it "前後の空白（全角を含む）を消して保存する" do
+          post_with_insight(went_well: "　集中できた　", to_improve: "")
+
+          expect(study_record.insights.pluck(:body)).to eq(["集中できた"])
+        end
+
+        it "気づきが100字を超える場合は、正しく書いた方も含めて何も保存せず評価待ちのままにする" do
+          expect {
+            post_with_insight(went_well: "最初の5分は音読から始めた", to_improve: "あ" * 101)
+          }.to change(Evaluation, :count).by(0).and change(Insight, :count).by(0)
+
+          expect(study_record.reload).to be_awaiting_evaluation
+          expect(study_record.rank).to be_nil
+          expect(response).to have_http_status(:unprocessable_content)
+        end
+      end
     end
 
     context "学習記録が評価済みの場合" do
