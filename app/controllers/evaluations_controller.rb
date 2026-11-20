@@ -14,7 +14,11 @@ class EvaluationsController < ApplicationController
   def create
     @evaluation = @study_record.build_evaluation(evaluation_params)
 
-    if EvaluationSubmission.call(evaluation: @evaluation, study_record: @study_record)
+    if EvaluationSubmission.call(
+      evaluation: @evaluation,
+      study_record: @study_record,
+      insight_params: insight_params
+    )
       redirect_to study_record_evaluation_path(@study_record), status: :see_other
     else
       render_evaluation_form
@@ -68,6 +72,10 @@ class EvaluationsController < ApplicationController
 
   def evaluation_params
     params.fetch(:evaluation, {}).permit(:focus_option_id, :challenge_option_id)
+  end
+
+  def insight_params
+    params.fetch(:insight, {}).permit(:went_well, :to_improve)
   end
 
   def set_evaluation_options

@@ -1,11 +1,12 @@
 class EvaluationSubmission
-  def self.call(evaluation:, study_record:)
-    new(evaluation: evaluation, study_record: study_record).call
+  def self.call(evaluation:, study_record:, insight_params:)
+    new(evaluation: evaluation, study_record: study_record, insight_params: insight_params).call
   end
 
-  def initialize(evaluation:, study_record:)
+  def initialize(evaluation:, study_record:, insight_params:)
     @evaluation = evaluation
     @study_record = study_record
+    @insight_params = insight_params
   end
 
   def call
@@ -25,5 +26,5 @@ class EvaluationSubmission
 
   private
 
-  attr_reader :evaluation, :study_record
+  attr_reader :evaluation, :study_record, :insight_params
 end
