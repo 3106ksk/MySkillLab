@@ -12,8 +12,7 @@ class EvaluationsController < ApplicationController
   end
 
   def create
-    @evaluation = Evaluation.new(evaluation_params)
-    @evaluation.study_record = @study_record
+    @evaluation = @study_record.build_evaluation(evaluation_params)
 
     if save_evaluation_and_rank
       redirect_to study_record_evaluation_path(@study_record), status: :see_other
