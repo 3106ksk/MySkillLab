@@ -14,7 +14,7 @@ class EvaluationsController < ApplicationController
   def create
     @evaluation = @study_record.build_evaluation(evaluation_params)
 
-    if save_evaluation_and_rank
+    if EvaluationSubmission.call(evaluation: @evaluation, study_record: @study_record)
       redirect_to study_record_evaluation_path(@study_record), status: :see_other
     else
       render_evaluation_form
@@ -78,20 +78,5 @@ class EvaluationsController < ApplicationController
   def render_evaluation_form
     set_evaluation_options
     render :new, status: :unprocessable_entity
-  end
-
-  def save_evaluation_and_rank
-    StudyRecord.transaction do
-      if @evaluation.save
-        rank_code = RankDeterminer.call(
-          focus_point: @evaluation.focus_point,
-          challenge_point: @evaluation.challenge_point
-        )
-
-        @study_record.mark_as_evaluated!(rank_code)
-      else
-        false
-      end
-    end
   end
 end
