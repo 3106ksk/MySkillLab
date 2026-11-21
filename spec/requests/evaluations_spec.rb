@@ -207,6 +207,7 @@ RSpec.describe "Evaluations", type: :request do
           expect(study_record.rank).to be_nil
           expect(response).to have_http_status(:unprocessable_content)
           expect(response.body).to include(%(action="#{study_record_evaluation_path(study_record)}"))
+          expect(response.body).to include("100文字以内で入力してください")
         end
       end
     end

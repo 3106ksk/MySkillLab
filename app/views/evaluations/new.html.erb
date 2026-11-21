@@ -56,6 +56,11 @@
         <%= @evaluation.errors.full_messages_for(:base).first %>
       </p>
     <% end %>
+    <% if @insight && @insight.errors.any? %>
+      <p class="group-error" role="alert">
+        <%= @insight.errors.messages_for(:body).first %>
+      </p>
+    <% end %>
 
     <%= tag.fieldset class: "evaluation-panel", aria: { describedby: ("focus-option-error" if @evaluation.errors[:focus_option].any?) } do %>
       <legend class="evaluation-panel-head">

@@ -32,6 +32,17 @@ class EvaluationsController < ApplicationController
     )
 
     render_evaluation_form
+  rescue ActiveRecord::RecordInvalid => e
+    if e.record.class == Insight
+      @insight = e.record
+    else
+      @evaluation.errors.add(
+        :base,
+        "評価結果を保存できませんでした。もう一度お試しください"
+      )
+    end
+
+    render_evaluation_form
   end
 
   def show
