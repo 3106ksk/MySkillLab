@@ -52,6 +52,10 @@
                 required: を選択してください
               study_record_id:
                 taken: はすでに評価済みです
+          insight:
+            attributes:
+              body:
+                too_long: "%{count}文字以内で入力してください"
           goal_skill_setting:
             attributes:
               base:

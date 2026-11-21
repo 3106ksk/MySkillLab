@@ -12,10 +12,13 @@ class EvaluationsController < ApplicationController
   end
 
   def create
-    @evaluation = Evaluation.new(evaluation_params)
-    @evaluation.study_record = @study_record
+    @evaluation = @study_record.build_evaluation(evaluation_params)
 
-    if save_evaluation_and_rank
+    if EvaluationSubmission.call(
+      evaluation: @evaluation,
+      study_record: @study_record,
+      insight_params: insight_params
+    )
       redirect_to study_record_evaluation_path(@study_record), status: :see_other
     else
       render_evaluation_form
@@ -27,6 +30,17 @@ class EvaluationsController < ApplicationController
       :base,
       "評価結果を保存できませんでした。もう一度お試しください"
     )
+
+    render_evaluation_form
+  rescue ActiveRecord::RecordInvalid => e
+    if e.record.class == Insight
+      @insight = e.record
+    else
+      @evaluation.errors.add(
+        :base,
+        "評価結果を保存できませんでした。もう一度お試しください"
+      )
+    end
 
     render_evaluation_form
   end
@@ -71,6 +85,10 @@ class EvaluationsController < ApplicationController
     params.fetch(:evaluation, {}).permit(:focus_option_id, :challenge_option_id)
   end
 
+  def insight_params
+    params.fetch(:insight, {}).permit(:went_well, :to_improve)
+  end
+
   def set_evaluation_options
     @focus_options = FocusOption.display_order
     @challenge_options = ChallengeOption.display_order
@@ -79,20 +97,5 @@ class EvaluationsController < ApplicationController
   def render_evaluation_form
     set_evaluation_options
     render :new, status: :unprocessable_entity
-  end
-
-  def save_evaluation_and_rank
-    StudyRecord.transaction do
-      if @evaluation.save
-        rank_code = RankDeterminer.call(
-          focus_point: @evaluation.focus_point,
-          challenge_point: @evaluation.challenge_point
-        )
-
-        @study_record.mark_as_evaluated!(rank_code)
-      else
-        false
-      end
-    end
   end
 end
