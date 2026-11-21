@@ -18,6 +18,15 @@ class EvaluationSubmission
         )
 
         study_record.mark_as_evaluated!(rank_code)
+
+        insight_params.each do |kind, body|
+          next if body.blank?
+
+          insight = study_record.insights.build(kind: kind, body: body)
+          insight.save!
+        end
+
+        true
       else
         false
       end
