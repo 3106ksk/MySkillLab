@@ -175,7 +175,7 @@ RSpec.describe "Evaluations", type: :request do
             post_with_insight(went_well: "最初の5分は音読から始めた", to_improve: "")
           }.to change(Evaluation, :count).by(1).and change(Insight, :count).by(1)
 
-          expect(study_record.insights.pluck(:kind)).to eq(["went_well"])
+          expect(study_record.insights.pluck(:kind)).to eq([ "went_well" ])
         end
 
         it "両方とも空欄の場合は、評価だけを保存する" do
@@ -195,7 +195,7 @@ RSpec.describe "Evaluations", type: :request do
         it "前後の空白（全角を含む）を消して保存する" do
           post_with_insight(went_well: "　集中できた　", to_improve: "")
 
-          expect(study_record.insights.pluck(:body)).to eq(["集中できた"])
+          expect(study_record.insights.pluck(:body)).to eq([ "集中できた" ])
         end
 
         it "気づきが100字を超える場合は、正しく書いた方も含めて何も保存せず評価待ちのままにする" do
