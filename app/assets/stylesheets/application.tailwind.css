@@ -2452,85 +2452,96 @@
     text-align: center;
   }
 
-  .evaluation-result-section {
-    position: relative;
-    border: var(--border-box);
-    border-radius: var(--radius-box);
-    padding: var(--space-6) var(--space-5) var(--space-5);
-  }
-
-  .evaluation-result-section-title {
-    position: absolute;
-    top: 0;
-    left: 50%;
+  /* 学習結果（v4）：評価の入力と同じ面・見出しに、左＝小さなラベル／右＝値の行を並べる */
+  .evaluation-result-title {
     margin: 0;
-    background: var(--color-paper);
-    padding-inline: var(--space-3);
+    font-size: 24px;
+    font-weight: 900;
+    line-height: 1.4;
     text-align: center;
-    transform: translate(-50%, -50%);
-    white-space: nowrap;
+    overflow-wrap: anywhere;
   }
 
-  .evaluation-result-list {
-    border: 0;
-  }
-
-  .evaluation-result-list .definition-row {
-    border-bottom: var(--border-hair);
-  }
-
-  .evaluation-session {
-    margin-top: var(--space-7);
-  }
-
-  .evaluation-session-list .definition-row {
-    grid-template-columns: 112px minmax(0, 160px);
+  .evaluation-result-stamp {
+    display: flex;
     justify-content: center;
-    gap: var(--space-3);
-    padding-block: var(--space-2);
+    margin: 4px 0 8px;
   }
 
-  .evaluation-session-list dd {
-    text-align: center;
-  }
-
-  .evaluation-breakdown .definition-row {
-    grid-template-columns: 112px minmax(0, 320px);
-    justify-content: center;
-    gap: var(--space-3);
-    line-height: 1.8;
-  }
-
-  .evaluation-breakdown dt {
-    letter-spacing: 0.04em;
-  }
-
-  .evaluation-result-section + .evaluation-result-section {
-    margin-top: var(--space-7);
-  }
-
-  .evaluation-result-reason {
+  /* 学習記録の詳細（.form-shell の中・grid ではない）でも面の間をあける */
+  .form-shell > .result-panel + .result-panel {
     margin-top: var(--space-4);
   }
 
-  .evaluation-result-actions {
-    justify-content: center;
-    margin-top: var(--space-9);
+  .result-rows {
+    margin: 0;
   }
 
-  @media (min-width: 768px) {
-    .evaluation-result-page {
-      display: grid;
-      min-height: 100vh;
-      place-items: center;
-    }
+  .result-row {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-4);
+    border-top: 1px solid #dcdfd2;
+    padding: 12px 0;
+  }
+
+  .result-row:first-child {
+    border-top: 0;
+    padding-top: 0;
+  }
+
+  .result-row:last-child {
+    padding-bottom: 0;
+  }
+
+  .result-key {
+    flex: 0 0 92px;
+    padding-top: 3px;
+    color: #6c6e63;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+  }
+
+  .result-value {
+    min-width: 0;
+    margin: 0;
+    color: #23251d;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+  }
+
+  .result-value-text {
+    font-weight: 500;
+  }
+
+  .result-note {
+    display: block;
+    margin-top: 2px;
+    color: #6c6e63;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .result-reason {
+    margin: 14px 0 0;
+    border-top: 1px solid #dcdfd2;
+    padding-top: 12px;
+    color: #4d4f46;
+    font-size: 13px;
+    line-height: 1.7;
   }
 
   @media (max-width: 767px) {
-    .evaluation-session-list .definition-row,
-    .evaluation-breakdown .definition-row {
-      grid-template-columns: 88px minmax(0, 1fr);
-      justify-content: stretch;
+    .result-row {
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .result-key {
+      flex-basis: auto;
     }
   }
 

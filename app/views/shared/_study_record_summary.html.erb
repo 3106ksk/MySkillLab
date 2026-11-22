@@ -1,26 +1,33 @@
 <%# locals: (study_record:) %>
 
-<section class="evaluation-result-section evaluation-session" aria-labelledby="session-title">
-  <h2 id="session-title" class="evaluation-result-section-title"><%= t(".title") %></h2>
+<section class="evaluation-panel result-panel" aria-labelledby="session-title">
+  <h2 id="session-title" class="evaluation-panel-head">
+    <span class="evaluation-panel-label">
+      <span class="evaluation-panel-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="13.5" r="6.5"/><path d="M12 13.5V9.5M12 7V4M9.5 4h5"/></svg>
+      </span>
+      <%= t(".title") %>
+    </span>
+  </h2>
 
-  <dl class="definition-list evaluation-result-list evaluation-session-list">
-    <div class="definition-row">
-      <dt><%= t(".started_at") %></dt>
-      <dd>
+  <dl class="result-rows">
+    <div class="result-row">
+      <dt class="result-key"><%= t(".started_at") %></dt>
+      <dd class="result-value num">
         <time datetime="<%= study_record.started_at.iso8601 %>">
           <%= l(study_record.started_at, format: :record) %>
         </time>
       </dd>
     </div>
 
-    <div class="definition-row">
-      <dt><%= t(".planned_minutes") %></dt>
-      <dd class="num"><%= t(".duration_minutes", minutes: study_record.planned_minutes) %></dd>
+    <div class="result-row">
+      <dt class="result-key"><%= t(".planned_minutes") %></dt>
+      <dd class="result-value num"><%= t(".duration_minutes", minutes: study_record.planned_minutes) %></dd>
     </div>
 
-    <div class="definition-row">
-      <dt><%= t(".actual_minutes") %></dt>
-      <dd class="num"><%= t(".duration_minutes", minutes: study_record.actual_minutes) %></dd>
+    <div class="result-row">
+      <dt class="result-key"><%= t(".actual_minutes") %></dt>
+      <dd class="result-value num"><%= t(".duration_minutes", minutes: study_record.actual_minutes) %></dd>
     </div>
   </dl>
 </section>
