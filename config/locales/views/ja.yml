@@ -44,6 +44,11 @@ ja:
       duration_minutes: "%{minutes}分"
     evaluation_breakdown:
       title: 今回の努力の記録
+    insight_summary:
+      title: 今回の気づき
+  insight_tags:
+    went_well: よかったこと
+    to_improve: 次への改善点
   static_pages:
     home:
       brand: MySkillLab
@@ -497,10 +502,8 @@ ja:
       insight:
         aux: 任意・100文字まで
         went_well:
-          label: よかったこと
           placeholder: 例：最初の5分は音読から始めた
         to_improve:
-          label: 次への改善点
           placeholder: 例：スマホを別の部屋に置く
       submit: 記録する
     show:

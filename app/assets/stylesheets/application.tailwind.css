@@ -2534,6 +2534,24 @@
     line-height: 1.7;
   }
 
+  /* 気づきの札：よかったこと＝緑／次への改善点＝金茶。評価の入力と学習結果で同じ色 */
+  .insight-tag {
+    display: inline-block;
+    border-radius: 6px;
+    padding: 2px 8px;
+    letter-spacing: 0.04em;
+  }
+
+  .insight-tag-went-well {
+    background: #e9f2ed;
+    color: var(--color-green-700);
+  }
+
+  .insight-tag-to-improve {
+    background: #f5ecdd;
+    color: var(--color-kincha-600);
+  }
+
   @media (max-width: 767px) {
     .result-row {
       flex-direction: column;

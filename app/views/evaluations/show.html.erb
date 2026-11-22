@@ -9,6 +9,7 @@
 
   <%= render "shared/study_record_summary", study_record: @study_record %>
   <%= render "shared/evaluation_breakdown", evaluation: @evaluation, rank: @study_record.rank %>
+  <%= render "shared/insight_summary", insights: @study_record.insights %>
 
   <div class="evaluation-actions">
     <%= link_to t(".actions.study_again"), new_study_record_path, class: "btn btn-primary" %>
