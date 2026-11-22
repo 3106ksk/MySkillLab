@@ -2213,12 +2213,6 @@
     line-height: 1.5;
   }
 
-  .evaluation-question-help {
-    margin: 4px 0 0;
-    color: var(--color-ink-600);
-    font-size: 13px;
-  }
-
   .evaluation-form {
     display: grid;
     gap: var(--space-4);
