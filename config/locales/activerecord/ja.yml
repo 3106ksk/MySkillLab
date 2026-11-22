@@ -17,7 +17,7 @@
           activity: 学習内容
         evaluation:
           focus_option: 集中
-          challenge_option: チャレンジ
+          challenge_option: 結果
           study_record_id: 学習記録
         weekly_reflection:
           learning_skill: 今週の学習スキル
