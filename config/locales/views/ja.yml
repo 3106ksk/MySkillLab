@@ -494,6 +494,14 @@ ja:
       question: 今回の学習は、どのような時間でしたか。
       question_help: 実感に近いものを1つずつ選んでください。
       choose_one: "%{count}つから1つ"
+      insight:
+        aux: 任意・100文字まで
+        went_well:
+          label: よかったこと
+          placeholder: 例：最初の5分は音読から始めた
+        to_improve:
+          label: 次への改善点
+          placeholder: 例：スマホを別の部屋に置く
       submit: 記録する
     show:
       actions:

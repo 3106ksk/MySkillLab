@@ -34,7 +34,7 @@ class EvaluationsController < ApplicationController
     render_evaluation_form
   rescue ActiveRecord::RecordInvalid => e
     if e.record.class == Insight
-      @insight = e.record
+      @failed_insight = e.record
     else
       @evaluation.errors.add(
         :base,
