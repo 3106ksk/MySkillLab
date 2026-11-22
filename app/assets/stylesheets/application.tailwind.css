@@ -2229,7 +2229,7 @@
     min-width: 0;
     margin: 0;
     border: 1px solid #c8cbc0;
-    border-radius: 6px;
+    border-radius: 12px;
     background: #fff;
     padding: 20px var(--space-5) var(--space-5);
   }
