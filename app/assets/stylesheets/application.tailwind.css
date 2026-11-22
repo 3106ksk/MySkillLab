@@ -2289,6 +2289,17 @@
     font-weight: 500;
   }
 
+  /* よかったこと・次への改善点：1つの面の中に、見出しと欄を2組 */
+  .evaluation-insight + .evaluation-insight {
+    margin-top: 20px;
+  }
+
+  .evaluation-insight .evaluation-panel-head {
+    margin-bottom: var(--space-2);
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
   .evaluation-panel-error {
     margin: 0 0 var(--space-3);
     font-size: 13px;

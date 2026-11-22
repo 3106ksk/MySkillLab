@@ -119,26 +119,28 @@
     <% end %>
 
     <%= fields_for :insight do |insight_form| %>
-      <% %i[went_well to_improve].each do |kind| %>
-        <div class="evaluation-panel">
-          <div class="evaluation-panel-head">
-            <%= insight_form.label kind, class: "evaluation-panel-label" do %>
-              <span class="evaluation-panel-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24"><path d="M4 20l1-4L16.5 4.5a2 2 0 0 1 3 3L8 19z"/><path d="M14.5 6.5l3 3"/></svg>
-              </span>
-              <%= t(".insight.#{kind}.label") %>
-            <% end %>
-            <span class="evaluation-panel-aux"><%= t(".insight.aux") %></span>
-          </div>
+      <div class="evaluation-panel">
+        <% %i[went_well to_improve].each do |kind| %>
+          <div class="evaluation-insight">
+            <div class="evaluation-panel-head">
+              <%= insight_form.label kind, class: "evaluation-panel-label" do %>
+                <span class="evaluation-panel-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M4 20l1-4L16.5 4.5a2 2 0 0 1 3 3L8 19z"/><path d="M14.5 6.5l3 3"/></svg>
+                </span>
+                <%= t(".insight.#{kind}.label") %>
+              <% end %>
+              <span class="evaluation-panel-aux"><%= t(".insight.aux") %></span>
+            </div>
 
-          <%= insight_form.text_area kind,
-                value: params.dig(:insight, kind),
-                maxlength: 100,
-                rows: 2,
-                placeholder: t(".insight.#{kind}.placeholder"),
-                class: "field-control evaluation-insight-input" %>
-        </div>
-      <% end %>
+            <%= insight_form.text_area kind,
+                  value: params.dig(:insight, kind),
+                  maxlength: 100,
+                  rows: 2,
+                  placeholder: t(".insight.#{kind}.placeholder"),
+                  class: "field-control evaluation-insight-input" %>
+          </div>
+        <% end %>
+      </div>
     <% end %>
 
     <div class="evaluation-actions">
