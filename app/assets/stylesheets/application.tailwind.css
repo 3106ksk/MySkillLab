@@ -2294,6 +2294,15 @@
     margin-top: 20px;
   }
 
+  /* 気づきの欄：1行の高さで始まり、書くと中身に合わせて伸びる（対応していないブラウザでは1行のまま中がスクロールする） */
+  .evaluation-insight-input {
+    display: block;
+    min-height: 44px;
+    field-sizing: content;
+    resize: none;
+    line-height: 1.6;
+  }
+
   .evaluation-insight .evaluation-panel-head {
     margin-bottom: var(--space-2);
     border-bottom: none;
