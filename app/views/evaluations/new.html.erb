@@ -123,12 +123,8 @@
           <div class="evaluation-insight">
             <div class="evaluation-panel-head">
               <%= insight_form.label kind, class: "evaluation-panel-label" do %>
-                <span class="evaluation-panel-icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24"><path d="M4 20l1-4L16.5 4.5a2 2 0 0 1 3 3L8 19z"/><path d="M14.5 6.5l3 3"/></svg>
-                </span>
                 <span class="insight-tag insight-tag-<%= kind.to_s.dasherize %>"><%= t("insight_tags.#{kind}") %></span>
               <% end %>
-              <span class="evaluation-panel-aux"><%= t(".insight.aux") %></span>
             </div>
 
             <%= insight_form.text_area kind,
@@ -139,6 +135,7 @@
                   class: "field-control evaluation-insight-input" %>
           </div>
         <% end %>
+        <p class="evaluation-panel-aux evaluation-insight-note"><%= t(".insight.aux") %></p>
       </div>
     <% end %>
 

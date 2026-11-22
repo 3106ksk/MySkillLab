@@ -499,7 +499,7 @@ ja:
       question: 今回の学習は、どのような時間でしたか。
       choose_one: "%{count}つから1つ"
       insight:
-        aux: 任意・100文字まで
+        aux: 任意・各100文字まで
         went_well:
           placeholder: 例：最初の5分は音読から始めた
         to_improve:
