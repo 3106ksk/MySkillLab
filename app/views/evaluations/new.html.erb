@@ -55,11 +55,6 @@
         <%= @evaluation.errors.full_messages_for(:base).first %>
       </p>
     <% end %>
-    <% if @failed_insight && @failed_insight.errors.any? %>
-      <p class="group-error" role="alert">
-        <%= @failed_insight.errors.messages_for(:body).first %>
-      </p>
-    <% end %>
 
     <%= tag.fieldset class: "evaluation-panel", aria: { describedby: ("focus-option-error" if @evaluation.errors[:focus_option].any?) } do %>
       <legend class="evaluation-panel-head">
@@ -120,6 +115,7 @@
     <%= fields_for :insight do |insight_form| %>
       <div class="evaluation-panel">
         <% %i[went_well to_improve].each do |kind| %>
+          <% insight_error = @failed_insight&.kind == kind.to_s ? @failed_insight.errors.messages_for(:body).first : nil %>
           <div class="evaluation-insight">
             <div class="evaluation-panel-head">
               <%= insight_form.label kind, class: "evaluation-panel-label" do %>
@@ -132,7 +128,11 @@
                   maxlength: 100,
                   rows: 1,
                   placeholder: t(".insight.#{kind}.placeholder"),
-                  class: "field-control evaluation-insight-input" %>
+                  class: "field-control evaluation-insight-input#{' has-error' if insight_error}",
+                  aria: { invalid: ("true" if insight_error), describedby: ("insight-#{kind.to_s.dasherize}-error" if insight_error) } %>
+            <% if insight_error %>
+              <p id="insight-<%= kind.to_s.dasherize %>-error" class="group-error evaluation-insight-error" role="alert"><%= insight_error %></p>
+            <% end %>
           </div>
         <% end %>
         <p class="evaluation-panel-aux evaluation-insight-note"><%= t(".insight.aux") %></p>

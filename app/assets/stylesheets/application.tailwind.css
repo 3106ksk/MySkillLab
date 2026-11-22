@@ -2297,6 +2297,17 @@
     line-height: 1.6;
   }
 
+  /* 保存できなかった欄：赤の枠2px＋欄の直下に1文（v4 のエラーの形） */
+  .field-control.evaluation-insight-input.has-error {
+    border: 2px solid var(--color-error-600);
+  }
+
+  .evaluation-insight-error {
+    margin: var(--space-2) 0 0;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
   /* 2つの欄に共通する補足は、カードの下に1つだけ置く */
   .evaluation-insight-note {
     margin: 10px 0 0;
