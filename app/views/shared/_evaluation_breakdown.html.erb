@@ -1,34 +1,41 @@
 <%# locals: (evaluation:, rank:) %>
 
-<section class="evaluation-result-section" aria-labelledby="effort-title">
-  <h2 id="effort-title" class="evaluation-result-section-title"><%= t(".title") %></h2>
+<section class="evaluation-panel result-panel" aria-labelledby="effort-title">
+  <h2 id="effort-title" class="evaluation-panel-head">
+    <span class="evaluation-panel-label">
+      <span class="evaluation-panel-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r=".6"/></svg>
+      </span>
+      <%= t(".title") %>
+    </span>
+  </h2>
 
-  <dl class="definition-list evaluation-result-list evaluation-breakdown">
-    <div class="definition-row">
-      <dt><%= t("evaluation_result.axes.start") %></dt>
-      <dd><%= t("evaluation_result.start_label") %></dd>
+  <dl class="result-rows">
+    <div class="result-row">
+      <dt class="result-key"><%= t("evaluation_result.axes.start") %></dt>
+      <dd class="result-value"><%= t("evaluation_result.start_label") %></dd>
     </div>
 
-    <div class="definition-row">
-      <dt><%= t("evaluation_result.axes.focus") %></dt>
-      <dd>
-        <p><strong><%= evaluation.focus_option.label %></strong></p>
+    <div class="result-row">
+      <dt class="result-key"><%= t("evaluation_result.axes.focus") %></dt>
+      <dd class="result-value">
+        <%= evaluation.focus_option.label %>
         <% if evaluation.focus_option.description.present? %>
-          <p class="small"><%= evaluation.focus_option.description %></p>
+          <small class="result-note"><%= evaluation.focus_option.description %></small>
         <% end %>
       </dd>
     </div>
 
-    <div class="definition-row">
-      <dt><%= t("evaluation_result.axes.challenge") %></dt>
-      <dd>
-        <p><strong><%= evaluation.challenge_option.label %></strong></p>
+    <div class="result-row">
+      <dt class="result-key"><%= t("evaluation_result.axes.challenge") %></dt>
+      <dd class="result-value">
+        <%= evaluation.challenge_option.label %>
         <% if evaluation.challenge_option.description.present? %>
-          <p class="small"><%= evaluation.challenge_option.description %></p>
+          <small class="result-note"><%= evaluation.challenge_option.description %></small>
         <% end %>
       </dd>
     </div>
   </dl>
 
-  <p class="small evaluation-result-reason"><%= t("rank.reasons.#{rank}") %></p>
+  <p class="result-reason"><%= t("rank.reasons.#{rank}") %></p>
 </section>

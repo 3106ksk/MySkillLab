@@ -52,6 +52,13 @@ RSpec.describe "Evaluations", type: :request do
 
         expect(response).to have_http_status(:ok)
       end
+
+      it "よかったこと・次への改善点の欄を、100字までで表示する" do
+        get new_study_record_evaluation_path(study_record)
+
+        expect(response.body).to match(/<textarea[^>]*name="insight\[went_well\]"[^>]*maxlength="100"|<textarea[^>]*maxlength="100"[^>]*name="insight\[went_well\]"/)
+        expect(response.body).to match(/<textarea[^>]*name="insight\[to_improve\]"[^>]*maxlength="100"|<textarea[^>]*maxlength="100"[^>]*name="insight\[to_improve\]"/)
+      end
     end
 
     context "学習記録が評価済みの場合" do
@@ -99,6 +106,32 @@ RSpec.describe "Evaluations", type: :request do
         perform_request
 
         expect(response).to have_http_status(:ok)
+      end
+
+      it "気づきを両方書いた回は、両方を表示する" do
+        create(:insight, study_record: study_record, kind: "went_well", body: "最初の5分は音読から始めた")
+        create(:insight, study_record: study_record, kind: "to_improve", body: "スマホを別の部屋に置く")
+
+        perform_request
+
+        expect(response.body).to include("よかったこと", "最初の5分は音読から始めた")
+        expect(response.body).to include("次への改善点", "スマホを別の部屋に置く")
+      end
+
+      it "気づきを片方だけ書いた回は、書いた方だけを表示する" do
+        create(:insight, study_record: study_record, kind: "went_well", body: "最初の5分は音読から始めた")
+
+        perform_request
+
+        expect(response.body).to include("よかったこと", "最初の5分は音読から始めた")
+        expect(response.body).not_to include("次への改善点")
+      end
+
+      it "気づきを書かなかった回は、気づきの段を表示しない" do
+        perform_request
+
+        expect(response.body).not_to include("よかったこと")
+        expect(response.body).not_to include("次への改善点")
       end
     end
 
@@ -208,6 +241,14 @@ RSpec.describe "Evaluations", type: :request do
           expect(response).to have_http_status(:unprocessable_content)
           expect(response.body).to include(%(action="#{study_record_evaluation_path(study_record)}"))
           expect(response.body).to include("100文字以内で入力してください")
+        end
+
+        it "100字を超えて再描画でも、記載した気づきはそのまま" do
+          post_with_insight(went_well: "最初の5分は音読から始めた", to_improve: "あ" * 101)
+
+          expect(response).to have_http_status(:unprocessable_content)
+          expect(response.body).to match(/<textarea[^>]*name="insight\[went_well\]"[^>]*>\s*最初の5分は音読から始めた<\/textarea>/)
+          expect(response.body).to match(/<textarea[^>]*name="insight\[to_improve\]"[^>]*>\s*#{"あ" * 101}<\/textarea>/)
         end
       end
     end

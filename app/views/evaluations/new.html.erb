@@ -47,18 +47,12 @@
 
   <div class="evaluation-question">
     <h1 class="evaluation-question-title"><%= t(".question") %></h1>
-    <p class="evaluation-question-help"><%= t(".question_help") %></p>
   </div>
 
   <%= form_with model: @evaluation, url: study_record_evaluation_path(@study_record), class: "evaluation-form" do |form| %>
     <% if @evaluation.errors[:base].any? %>
       <p class="group-error" role="alert">
         <%= @evaluation.errors.full_messages_for(:base).first %>
-      </p>
-    <% end %>
-    <% if @insight && @insight.errors.any? %>
-      <p class="group-error" role="alert">
-        <%= @insight.errors.messages_for(:body).first %>
       </p>
     <% end %>
 
@@ -115,6 +109,33 @@
             <span class="evaluation-choice-description"><%= option.description %></span>
           <% end %>
         <% end %>
+      </div>
+    <% end %>
+
+    <%= fields_for :insight do |insight_form| %>
+      <div class="evaluation-panel">
+        <% %i[went_well to_improve].each do |kind| %>
+          <% insight_error = @failed_insight&.kind == kind.to_s ? @failed_insight.errors.messages_for(:body).first : nil %>
+          <div class="evaluation-insight">
+            <div class="evaluation-panel-head">
+              <%= insight_form.label kind, class: "evaluation-panel-label" do %>
+                <span class="insight-tag insight-tag-<%= kind.to_s.dasherize %>"><%= t("insight_tags.#{kind}") %></span>
+              <% end %>
+            </div>
+
+            <%= insight_form.text_area kind,
+                  value: params.dig(:insight, kind),
+                  maxlength: 100,
+                  rows: 1,
+                  placeholder: t(".insight.#{kind}.placeholder"),
+                  class: "field-control evaluation-insight-input#{' has-error' if insight_error}",
+                  aria: { invalid: ("true" if insight_error), describedby: ("insight-#{kind.to_s.dasherize}-error" if insight_error) } %>
+            <% if insight_error %>
+              <p id="insight-<%= kind.to_s.dasherize %>-error" class="group-error evaluation-insight-error" role="alert"><%= insight_error %></p>
+            <% end %>
+          </div>
+        <% end %>
+        <p class="evaluation-panel-aux evaluation-insight-note"><%= t(".insight.aux") %></p>
       </div>
     <% end %>
 

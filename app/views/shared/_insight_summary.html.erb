@@ -1,0 +1,25 @@
+<%# locals: (insights:) %>
+<%# 書いた気づきだけを、よかったこと → 次への改善点の順に出す。1件も無ければ何も出さない %>
+<% insights_by_kind = insights.index_by(&:kind) %>
+<% if insights_by_kind.any? %>
+  <section class="evaluation-panel result-panel" aria-labelledby="insight-title">
+    <h2 id="insight-title" class="evaluation-panel-head">
+      <span class="evaluation-panel-label">
+        <span class="evaluation-panel-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M4 20l1-4L16.5 4.5a2 2 0 0 1 3 3L8 19z"/><path d="M14.5 6.5l3 3"/></svg>
+        </span>
+        <%= t(".title") %>
+      </span>
+    </h2>
+
+    <dl class="result-rows">
+      <% %w[went_well to_improve].each do |kind| %>
+        <% next unless insights_by_kind[kind] %>
+        <div class="result-row">
+          <dt class="result-key"><span class="insight-tag insight-tag-<%= kind.dasherize %>"><%= t("insight_tags.#{kind}") %></span></dt>
+          <dd class="result-value result-value-text"><%= insights_by_kind[kind].body %></dd>
+        </div>
+      <% end %>
+    </dl>
+  </section>
+<% end %>
