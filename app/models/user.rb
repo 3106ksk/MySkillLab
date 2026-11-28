@@ -3,6 +3,7 @@ class User < ApplicationRecord
          :recoverable, :validatable
 
   has_many :study_records, dependent: :destroy
+  has_many :insights, through: :study_records
   has_many :goals, dependent: :destroy
   has_many :learning_skills, dependent: :destroy
 

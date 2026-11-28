@@ -37,6 +37,7 @@ Rails.application.routes.draw do
   end
 
   resources :learning_skills, only: [ :index, :new, :create ]
+  resources :insights, only: [ :index ]
 
   get "up" => "rails/health#show", as: :rails_health_check
 end
